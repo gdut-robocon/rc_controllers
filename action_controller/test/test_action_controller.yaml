@@ -1,0 +1,13 @@
+controllers:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+  action_controller:
+    type: action_controller/Controller
+    action_names: # action names
+      - location_action
+    pub_odom_tf: true # default use data of the first action as pub_odom_tf data source
+    pub_action_data: true
+    pub_rate: 100.0
+    # twist covariance of (x, y, z, r, p, y)
+    twist_covariance_diagonal: [ 0.001, 0.001, 0.001, 0.001, 0.001, 0.001 ]

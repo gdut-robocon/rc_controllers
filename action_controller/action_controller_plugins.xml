@@ -1,0 +1,7 @@
+<library path="lib/libaction_controller">
+    <class name="action_controller/Controller" type="action_controller::Controller"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+        </description>
+    </class>
+</library>

@@ -1,0 +1,12 @@
+<library path="lib/libchassis_controllers">
+
+    <class name="chassis_controllers/SwerveController"
+           type="chassis_controllers::SwerveController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+            The SwerveController is swerve drive Chassis controller. It expects a EffortJointInterface
+            type of hardware interface.
+        </description>
+    </class>
+
+</library>

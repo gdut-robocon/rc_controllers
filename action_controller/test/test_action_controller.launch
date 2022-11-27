@@ -1,0 +1,7 @@
+<launch>
+
+    <rosparam file="$(find action_controller)/test/test_action_controller.yaml" command="load"/>
+    <node name="controller_spawner" pkg="controller_manager" type="controller_manager" output="screen"
+          args="spawn
+          controllers/action_controller"/>
+</launch>
