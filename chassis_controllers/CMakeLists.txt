@@ -61,9 +61,9 @@ include_directories(
 ## Declare cpp executables
 add_library(${PROJECT_NAME}
         src/chassis_base.cpp
-        #        src/omni.cpp
-        #        src/sentry.cpp
+        src/omni.cpp
         src/swerve.cpp
+        #        src/sentry.cpp
         #        src/reaction_wheel.cpp
         )
 

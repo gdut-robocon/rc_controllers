@@ -27,8 +27,6 @@
     <depend>effort_controllers</depend>
     <depend>tf2_geometry_msgs</depend>
 
-    <exec_depend>robot_localization</exec_depend>
-
     <export>
         <controller_interface plugin="${prefix}/chassis_controllers_plugins.xml"/>
     </export>

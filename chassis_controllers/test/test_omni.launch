@@ -1,0 +1,15 @@
+<launch>
+    <arg name="robot_type" value="rabbit"/>
+
+    <rosparam file="$(find chassis_controllers)/test/test_omni.yaml" command="load"/>
+
+    <node name="controller_loader" pkg="controller_manager" type="controller_manager" output="screen"
+          args="spawn
+          controllers/joint_state_controller
+          controllers/chassis_controller"
+    />
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="50.0"/>
+    </node>
+</launch>

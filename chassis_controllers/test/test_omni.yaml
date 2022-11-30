@@ -1,0 +1,31 @@
+controllers:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+  robot_state_controller:
+    type: robot_state_controller/RobotStateController
+    publish_rate: 100
+
+  chassis_controller:
+    # ChassisBase
+    type: chassis_controllers/OmniController
+    publish_rate: 100
+    timeout: 0.1
+    pid_follow: { p: 5.0, i: 0, d: 0.3, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+    # OmniController
+    wheels:
+      front:
+        pose: [ 0.0, 0.2, 0.0 ] # x y beta
+        joint: front_wheel_joint
+        <<: &wheel_setting
+          roller_angle: 0.
+          radius: 0.07625
+          pid: { p: 0.6, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+      left:
+        pose: [ -0.1732, -0.1, 2.094 ]
+        joint: left_wheel_joint
+        <<: *wheel_setting
+      right:
+        pose: [ 0.1732, -0.1, -2.094 ]
+        joint: right_wheel_joint
+        <<: *wheel_setting
