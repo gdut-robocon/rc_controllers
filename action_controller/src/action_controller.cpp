@@ -82,27 +82,30 @@ void Controller::update(const ros::Time& time, const ros::Duration& period)
 {
   if (publish_rate_ > 0.0 && time - last_publish_time_ >= ros::Duration(1 / publish_rate_))
   {
+    double getPoseX = action_handles_[0].getPoseY();
+    double getPoseY = action_handles_[0].getPoseX() * -1.0;
+    double getPitchAngle = action_handles_[0].getPitchAngle();
+    double getYawAngle = action_handles_[0].getYawAngle();
     if (pub_odom_tf_)
     {
       // publish tf
       odom2base_.header.stamp = time;
-      odom2base_.transform.translation.x = action_handles_[0].getPoseX();
-      odom2base_.transform.translation.y = action_handles_[0].getPoseY();
+      odom2base_.transform.translation.x = getPoseX;
+      odom2base_.transform.translation.y = getPoseY;
       odom2base_.transform.translation.z = 0;
-      odom2base_.transform.rotation = rpyToQuat(action_handles_[0].getRollAngle(), action_handles_[0].getPitchAngle(),
-                                                action_handles_[0].getYawAngle());
+      odom2base_.transform.rotation = rpyToQuat(action_handles_[0].getRollAngle(), getPitchAngle, getYawAngle);
       tf_broadcaster_.sendTransform(odom2base_);
       // publish odom
       if (odom_pub_->trylock())
       {
         odom_pub_->msg_.header.stamp = time;
-        odom_pub_->msg_.pose.pose.position.x = action_handles_[0].getPoseX();
-        odom_pub_->msg_.pose.pose.position.y = action_handles_[0].getPoseY();
-        odom_pub_->msg_.pose.pose.orientation = rpyToQuat(
-            action_handles_[0].getRollAngle(), action_handles_[0].getPitchAngle(), action_handles_[0].getYawAngle());
-        odom_pub_->msg_.twist.twist.linear.x = (action_handles_[0].getPoseX() - last_pose_.x) / period.toSec();
-        odom_pub_->msg_.twist.twist.linear.y = (action_handles_[0].getPoseY() - last_pose_.y) / period.toSec();
-        odom_pub_->msg_.twist.twist.angular.z = (action_handles_[0].getYawAngle() - last_pose_.z) / period.toSec();
+        odom_pub_->msg_.pose.pose.position.x = getPoseX;
+        odom_pub_->msg_.pose.pose.position.y = getPoseY;
+        odom_pub_->msg_.pose.pose.orientation =
+            rpyToQuat(action_handles_[0].getRollAngle(), getPitchAngle, getYawAngle);
+        odom_pub_->msg_.twist.twist.linear.x = (getPoseX - last_pose_.x) / period.toSec();
+        odom_pub_->msg_.twist.twist.linear.y = (getPoseY - last_pose_.y) / period.toSec();
+        odom_pub_->msg_.twist.twist.angular.z = (getYawAngle - last_pose_.z) / period.toSec();
         odom_pub_->unlockAndPublish();
       }
     }
@@ -124,9 +127,9 @@ void Controller::update(const ros::Time& time, const ros::Duration& period)
         }
       }
     }
-    last_pose_.x = action_handles_[0].getPoseX();
-    last_pose_.y = action_handles_[0].getPoseY();
-    last_pose_.z = action_handles_[0].getYawAngle();
+    last_pose_.x = getPoseX;
+    last_pose_.y = getPoseY;
+    last_pose_.z = getYawAngle;
     last_publish_time_ = ros::Time::now();
   }
 }
