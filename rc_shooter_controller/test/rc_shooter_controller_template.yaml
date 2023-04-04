@@ -1,0 +1,20 @@
+controllers:
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+  shooter_controller:
+    type: rc_shooter_controller/Controller
+    publish_rate: 50
+    timeout: 0.01
+    wheel_radius: 0.07
+    emission_mass: 0.1
+    emission_coefficient: 0.85
+    acceleration_time: 0.2
+    diff_ratio: 0.2
+    limiting_coefficient: 70000
+    left_friction_wheel:
+      joint: joint1
+      pid: { p: 0.6, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
+    right_friction_wheel:
+      joint: joint2
+      pid: { p: 0.6, i: 0, d: 0.0, i_max: 0.0, i_min: 0.0, antiwindup: true, publish_state: true }
