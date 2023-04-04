@@ -24,7 +24,6 @@ namespace rc_shooter_controller
         void starting(const ros::Time &time) override;
 
     private:
-        void stop(const ros::Time &time,const ros::Duration &period);
         void same(const ros::Time &time,const ros::Duration &period);
         void diff(const ros::Time &time,const ros::Duration &period);
         void moveJoint(const ros::Time &time,const ros::Duration &period);
