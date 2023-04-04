@@ -1,0 +1,9 @@
+<library path="lib/librc_shooter_controller">
+
+    <class name="rc_shooter_controller/Controller" type="rc_shooter_controller::Controller"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+            this is a launch controller developed specifically for the 2023 robocon competition
+        </description>
+    </class>
+</library>
