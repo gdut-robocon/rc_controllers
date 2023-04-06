@@ -57,8 +57,8 @@ namespace rc_shooter_controller
         if(state_changed_){
             state_changed_=false;
             ROS_INFO("[Shooter_Controller] SAME MODE");}
-        left_speed_command_=final_speed_;
-        right_speed_command_=final_speed_;
+        left_speed_command_=final_speed_/wheel_radius_;
+        right_speed_command_=final_speed_/wheel_radius_;
         moveJoint(time,period);
     }
 
