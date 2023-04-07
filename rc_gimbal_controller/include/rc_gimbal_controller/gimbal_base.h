@@ -20,12 +20,22 @@
 #include <dynamic_reconfigure/server.h>
 #include <rc_msgs/GimbalCmd.h>
 #include <rc_msgs/GimbalDesError.h>
-#include <rc_msgs/TrackData.h>
 #include <Eigen/Eigen>
 #include <boost/scoped_ptr.hpp>
 
-namespace gimbal_controller {
+namespace rc_gimbal_controller {
     class Controller : public controller_interface::MultiInterfaceController<hardware_interface::EffortJointInterface> {
+    public:
+        Controller() = default;
+
+        bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &root_nh, ros::NodeHandle &controller_nh) override;
+
+        void update(const ros::Time &time, const ros::Duration &period) override;
+
+        void setDes(const ros::Time &time, double yaw_des, double pitch_des);
+
+        void starting(const ros::Time &time) override;
+
     private:
         // Functions
         void direct(const ros::Time &time);
@@ -70,17 +80,6 @@ namespace gimbal_controller {
             NORMAL
         };
         int state_ = RATE;
-
-    public:
-        Controller() = default;
-
-        bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &root_nh, ros::NodeHandle &controller_nh) override;
-
-        void update(const ros::Time &time, const ros::Duration &period) override;
-
-        void setDes(const ros::Time &time, double yaw_des, double pitch_des);
-
-        void starting(const ros::Time &time) override;
     };
 
-}  // namespace gimbal_controller
+}  // namespace rc_gimbal_controller

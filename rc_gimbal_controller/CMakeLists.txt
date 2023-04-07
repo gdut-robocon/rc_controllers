@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(gimbal_controller)
+project(rc_gimbal_controller)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -73,6 +73,6 @@ install(
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 install(
-        FILES gimbal_controller_plugins.xml
+        FILES rc_gimbal_controller_plugins.xml
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

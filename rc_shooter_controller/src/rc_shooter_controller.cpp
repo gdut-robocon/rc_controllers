@@ -36,12 +36,12 @@ namespace rc_shooter_controller
     }
 
     void Controller::update(const ros::Time &time, const ros::Duration &period) {
-        Shooter_Cmd_ = *Shooter_Cmd_Buffer_.readFromRT();
-        if(state_!=Shooter_Cmd_.mode){
-            state_=Shooter_Cmd_.mode;
+        shooter_cmd_ = *shooter_cmd_buffer_.readFromRT();
+        if(state_!=shooter_cmd_.mode){
+            state_=shooter_cmd_.mode;
             state_changed_=true;
         }
-        final_speed_=Shooter_Cmd_.speed;
+        final_speed_=shooter_cmd_.speed;
         switch (state_) {
             case SAME:
                 same(time,period);
@@ -89,7 +89,7 @@ namespace rc_shooter_controller
     }
 
     void Controller::VelCallback(const rc_msgs::ShooterCmdConstPtr &msg) {
-        Shooter_Cmd_Buffer_.writeFromNonRT(*msg);
+        shooter_cmd_buffer_.writeFromNonRT(*msg);
         if (ros::topic::waitForMessage<rc_msgs::ShooterCmd>("/controllers/shooter_controller/command", ros::Duration(timeout_))) {
             command_received_ = true;
         } else {

@@ -2,13 +2,13 @@
 // Created by jialonglong on 2023/3/15.
 //
 // ref:https://github.com/rm-controls
-#include "gimbal_controller/gimbal_base.h"
+#include "rc_gimbal_controller/gimbal_base.h"
 #include <angles/angles.h>
 #include <pluginlib/class_list_macros.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 
-namespace gimbal_controller {
+namespace rc_gimbal_controller {
     bool Controller::init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &root_nh, ros::NodeHandle &controller_nh) {
         if (!controller_nh.getParam("time_out", time_out_)||!controller_nh.getParam("publish_rate", publish_rate_)) {
             ROS_ERROR("time_out or publish_rate is not set.");
@@ -124,7 +124,7 @@ namespace gimbal_controller {
 
         odom2gimbal_des_.transform.rotation = tf::createQuaternionMsgFromRollPitchYaw(0., pitch_real_des, yaw_real_des);
         odom2gimbal_des_.header.stamp = time;
-        tf_buffer_->setTransform(odom2gimbal_des_, "gimbal_controller", false);
+        tf_buffer_->setTransform(odom2gimbal_des_, "rc_gimbal_controller", false);
     }
 
     void Controller::rate(const ros::Time &time, const ros::Duration &period) {
@@ -133,7 +133,7 @@ namespace gimbal_controller {
             ROS_INFO("[Gimbal] Enter RATE");
             odom2gimbal_des_.transform.rotation = odom2pitch_.transform.rotation;
             odom2gimbal_des_.header.stamp = time;
-            tf_buffer_->setTransform(odom2gimbal_des_, "gimbal_controller", false);
+            tf_buffer_->setTransform(odom2gimbal_des_, "rc_gimbal_controller", false);
         } else {
             double roll{}, pitch{}, yaw{};
             quatToRPY(odom2gimbal_des_.transform.rotation, roll, pitch, yaw);
@@ -224,6 +224,6 @@ namespace gimbal_controller {
     }
 
 
-}  // namespace gimbal_controller
+}  // namespace rc_gimbal_controller
 
-PLUGINLIB_EXPORT_CLASS(gimbal_controller::Controller, controller_interface::ControllerBase)
+PLUGINLIB_EXPORT_CLASS(rc_gimbal_controller::Controller, controller_interface::ControllerBase)

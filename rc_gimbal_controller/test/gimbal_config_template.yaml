@@ -6,7 +6,7 @@ controllers:
     type: joint_state_controller/JointStateController
     publish_rate: 100
   gimbal_controller:
-    type: gimbal_controller/Controller
+    type: rc_gimbal_controller/Controller
     publish_rate: 100
     time_out: 0.01
     yaw:
