@@ -74,12 +74,17 @@ namespace action_controller
             tf_broadcaster_.sendTransform(odom2base_);
         }
         action_cmd_service_ = controller_nh.advertiseService("action_cmd", &Controller::setActionCmd, this);
+        ibus_listener_=controller_nh.subscribe<rc_msgs::IbusData>("ibus_data",1,&Controller::IbusData,this);
         last_publish_time_ = ros::Time::now();
         return true;
     }
 
     void Controller::update(const ros::Time& time, const ros::Duration& period)
     {
+        ibus_data=*cmd_buffer_ibus.readFromNonRT();
+        static bool enable_update_odom_=false;
+        ros::Time last_period_time;
+        nav_msgs::Odometry last_nav_msgs;
         if (publish_rate_ > 0.0 && time - last_publish_time_ >= ros::Duration(1 / publish_rate_))
         {
             double getPoseX = action_handles_[0].getPoseX();
@@ -98,15 +103,35 @@ namespace action_controller
                 // publish odom
                 if (odom_pub_->trylock())
                 {
+                    //normal state
                     odom_pub_->msg_.header.stamp = time;
-                    odom_pub_->msg_.pose.pose.position.x = getPoseX;
-                    odom_pub_->msg_.pose.pose.position.y = getPoseY;
                     odom_pub_->msg_.pose.pose.orientation =
                             rpyToQuat(action_handles_[0].getRollAngle(), getPitchAngle, getYawAngle);
                     odom_pub_->msg_.twist.twist.linear.x = (getPoseX - last_pose_.x) / period.toSec();
                     odom_pub_->msg_.twist.twist.linear.y = (getPoseY - last_pose_.y) / period.toSec();
                     odom_pub_->msg_.twist.twist.angular.z = (getYawAngle - last_pose_.z) / period.toSec();
                     odom_pub_->unlockAndPublish();
+
+                    //listen to ibus_data to update position
+                    if(ibus_data.sw_c==2)
+                    {
+                        enable_update_odom_=true;
+                    }
+                    if(enable_update_odom_) {
+                        last_period_time=ros::Time::now();
+                        odom_pub_->msg_.pose.pose.position.x =
+                                -0.25 + (getPoseX-last_nav_msgs.pose.pose.position.x);
+                        odom_pub_->msg_.pose.pose.position.y =
+                                -1.75 + (getPoseY-last_nav_msgs.pose.pose.position.y);
+                    }
+                    else
+                    {
+                        odom_pub_->msg_.pose.pose.position.x = getPoseX;
+                        odom_pub_->msg_.pose.pose.position.y = getPoseY;
+                        last_nav_msgs.pose.pose.position.x=odom_pub_->msg_.pose.pose.position.x;
+                        last_nav_msgs.pose.pose.position.y=odom_pub_->msg_.pose.pose.position.y;
+
+                    }
                 }
             }
             if (publish_action_data_)
@@ -165,6 +190,10 @@ namespace action_controller
             }
         }
         return true;
+    }
+
+    void Controller::IbusData(const rc_msgs::IbusDataConstPtr &msg){
+        cmd_buffer_ibus.writeFromNonRT(*msg);
     }
 
 }  // namespace action_controller

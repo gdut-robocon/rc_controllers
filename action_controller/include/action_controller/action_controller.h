@@ -13,6 +13,9 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <queue>
+#include <rc_msgs/IbusData.h>
+#include <realtime_tools/realtime_publisher.h>
+#include <realtime_tools/realtime_buffer.h>
 
 namespace action_controller
 {
@@ -27,6 +30,8 @@ public:
 
   bool setActionCmd(rc_msgs::ActionCmd::Request& req, rc_msgs::ActionCmd::Response& resp);
 
+protected:
+  void IbusData(const rc_msgs::IbusDataConstPtr &msg);
 private:
   std::vector<std::string> action_names_{};
   std::vector<rc_control::ActionHandle> action_handles_{};
@@ -38,12 +43,17 @@ private:
   std::shared_ptr<realtime_tools::RealtimePublisher<nav_msgs::Odometry>> odom_pub_{};
   rc_common::TfRtBroadcaster tf_broadcaster_{};
   ros::ServiceServer action_cmd_service_{};
+  realtime_tools::RealtimeBuffer<rc_msgs::IbusData> cmd_buffer_ibus;
+
+  rc_msgs::IbusData ibus_data;
 
   double publish_rate_{};
   bool pub_odom_tf_{};
   bool publish_action_data_{};
   ros::Time last_publish_time_;
+  ros::Subscriber ibus_listener_{};
 
   geometry_msgs::Vector3 last_pose_;
+
 };
 }  // namespace action_controller
