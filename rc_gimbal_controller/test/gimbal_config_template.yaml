@@ -1,0 +1,17 @@
+controllers:
+  robot_state_controller:
+    type: robot_state_controller/RobotStateController
+    publish_rate: 100
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100
+  gimbal_controller:
+    type: rc_gimbal_controller/Controller
+    publish_rate: 100
+    time_out: 0.01
+    yaw:
+      joint: "yaw_joint"
+      pid: { p: 7.5, i: 0, d: 0.3, i_clamp_max: 0.3, i_clamp_min: -0.3, antiwindup: true, publish_state: true }
+    pitch:
+      joint: "pitch_joint"
+      pid: { p: 22.0, i: 0, d: 0.75, i_clamp_max: 0, i_clamp_min: 0, antiwindup: true, publish_state: true }

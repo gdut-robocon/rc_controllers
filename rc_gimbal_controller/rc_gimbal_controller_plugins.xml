@@ -1,0 +1,11 @@
+<library path="lib/librc_gimbal_controller">
+
+    <class name="rc_gimbal_controller/Controller" type="rc_gimbal_controller::Controller"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+            The Controller is Robocon robot Gimbal controller. It expects a EffortJointInterface type of hardware
+            interface.
+        </description>
+    </class>
+
+</library>
